@@ -33,7 +33,7 @@ def request_handler(req, body):
     # 2. add this to redis stream(name): asteroids_stream
     redis_library.add_data_to_stream(rconn=rconn, stream=microservice_stream_name, data={uid: json.dumps(body)})
     response_data = redis_library.read_data_from_stream(
-        stream=frontend_stream_name, rconn=rconn, count=1, block=2000
+        stream=frontend_stream_name, rconn=rconn, count=1, block=10000
     )
 
     if response_data:
