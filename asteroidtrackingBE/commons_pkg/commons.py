@@ -46,7 +46,7 @@ def request_handler(req, body):
         data = {
             'error': 'Error message described below',
             'message': 'Make sure the redis and asteroidprocessor services are running locally',
-            'status': 503
+            'response_code': 503
         }
     ret = data
     ret_code = data.get('response_code')
