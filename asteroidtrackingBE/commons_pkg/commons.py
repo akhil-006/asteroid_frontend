@@ -40,8 +40,8 @@ def request_handler(req, body):
         data = extract_response(response_data[0][1])
         # print(data)
         data.update(path=req.path)
-        response_code = data['response_code']
-        del data['response_code']
+        # response_code = data['response_code']
+
     else:
         data = {
             'error': 'Error message described below',
@@ -49,6 +49,7 @@ def request_handler(req, body):
             'status': 503
         }
     ret = data
-    ret_code = data.get('status')
+    ret_code = data.get('response_code')
+    del data['response_code']
 
     return ret, ret_code
