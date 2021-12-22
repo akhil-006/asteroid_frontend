@@ -6,7 +6,7 @@ from commons_pkg.commons import frontend_stream_name, request_handler
 asteroids_bp = Blueprint('asteroids_bp', __name__, url_prefix='/')
 
 
-@asteroids_bp.route('create', methods=['POST'])
+@asteroids_bp.route('asteroid/create', methods=['POST'])
 def create_asteroid():
     try:
         # get the details of asteroid to be added
