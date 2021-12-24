@@ -1,10 +1,14 @@
 import random
 import json
 from redis_pkg import conn_handlers, redis_library
+from logger_pkg.logger import Logger
+
 
 # creating some global variables for easy implementation. Of course this won't be the way for production code.
 frontend_stream_name = 'asteroids_frontend_stream'
 microservice_stream_name = 'asteroids_stream'
+service = 'asteroidtracking_service'
+
 
 def getuniqueid():
     min = 000000000000000000000000
@@ -30,6 +34,11 @@ def request_handler(req, body):
     # send this body to the backend for processing
     # 1. Get the redis connections
     rconn = conn_handlers.connect()
+    objlog = Logger(rconn=rconn, service_name=service)
+    objlog.log(
+        level='INFO', req_id=uid,
+        message=f'request: {req.path}, method: {req.method}, header: {json.dumps({key:value for key, value in req.headers})}, body: {body}'
+    )
     # 2. add this to redis stream(name): asteroids_stream
     redis_library.add_data_to_stream(rconn=rconn, stream=microservice_stream_name, data={uid: json.dumps(body)})
     response_data = redis_library.read_data_from_stream(
@@ -40,12 +49,14 @@ def request_handler(req, body):
         data = extract_response(response_data[0][1])
         # print(data)
         data.update(path=req.path)
+        objlog.log(level='INFO', message=f'response: {json.dumps(data)}', type='response', req_id=uid)
     else:
         data = {
             'error': 'Error message described below',
             'message': 'Make sure the redis and asteroidprocessor services are running locally',
             'response_code': 503
         }
+        objlog.log(level='ERROR', message=f'response: {json.dumps(data)}', type='response', req_id=uid)
     ret = data
     ret_code = data.get('response_code')
     del data['response_code']
