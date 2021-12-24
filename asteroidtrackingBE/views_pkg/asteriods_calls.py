@@ -8,6 +8,9 @@ asteroids_bp = Blueprint('asteroids_bp', __name__, url_prefix='/')
 
 @asteroids_bp.route('asteroid/create', methods=['POST'])
 def create_asteroid():
+    """
+    Flask Handler for asteroid CREATION; POST CALL
+    """
     try:
         # get the details of asteroid to be added
         body = request.json
@@ -29,6 +32,9 @@ def create_asteroid():
 
 @asteroids_bp.route('getasteroidinfo/<path:asteroidid>', methods=['GET'])
 def get_asteroid_info(asteroidid):
+    """
+    Flask Handler for RETRIEVING asteroid info; GET CALL
+    """
     try:
         body = dict(asteroid_id=asteroidid)
         body.update(method=request.method)
@@ -49,6 +55,9 @@ def get_asteroid_info(asteroidid):
 
 @asteroids_bp.route('updateasteroid/<path:asteroidid>', methods=['PUT'])
 def update_asteroid_info(asteroidid):
+    """
+    Flask Handler for UPDATING asteroid info; PUT CALL
+    """
     try:
         body = request.json
         body.update(asteroid_id=asteroidid)
@@ -70,6 +79,9 @@ def update_asteroid_info(asteroidid):
 
 @asteroids_bp.route('deleteasteroid/<path:asteroidid>', methods=['DELETE'])
 def delete_asteroid_info(asteroidid):
+    """
+    Flask Handler for DELETING asteroid info; DELETE CALL
+    """
     try:
         body = dict(asteroid_id=asteroidid)
         body.update(method=request.method)

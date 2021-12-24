@@ -11,12 +11,18 @@ service = 'asteroidtracking_service'
 
 
 def getuniqueid():
+    """
+    Generates the unique id which is associated to a particular request and is also associated to a Asteroid(asteroid ID)
+    """
     min = 000000000000000000000000
     max = 999999999999999999999999
     return str(random.randrange(start=min, stop=max))
 
 
 def extract_response(data):
+    """
+    Extracts the response received by this(front-end) service from the backend service
+    """
     actual_data_dict = dict()
     i = 1
     for detail_list in data:
@@ -30,6 +36,10 @@ def extract_response(data):
 
 
 def request_handler(req, body):
+    """
+    A common request handler which delegates all the (asteroid)requests to the backend service with the help of
+    `microservice_stream_name` (backend service)stream.
+    """
     uid = getuniqueid()
     # send this body to the backend for processing
     # 1. Get the redis connections
