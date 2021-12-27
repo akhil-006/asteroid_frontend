@@ -30,7 +30,7 @@ def create_asteroid():
     return ret, ret_code
 
 
-@asteroids_bp.route('getasteroidinfo/<path:asteroidid>', methods=['GET'])
+@asteroids_bp.route('asteroid/fetch/<path:asteroidid>', methods=['GET'])
 def get_asteroid_info(asteroidid):
     """
     Flask Handler for RETRIEVING asteroid info; GET CALL
@@ -53,7 +53,7 @@ def get_asteroid_info(asteroidid):
     return ret, ret_code
 
 
-@asteroids_bp.route('updateasteroid/<path:asteroidid>', methods=['PUT'])
+@asteroids_bp.route('asteroid/update/<path:asteroidid>', methods=['PUT'])
 def update_asteroid_info(asteroidid):
     """
     Flask Handler for UPDATING asteroid info; PUT CALL
@@ -77,7 +77,7 @@ def update_asteroid_info(asteroidid):
     return ret, ret_code
 
 
-@asteroids_bp.route('deleteasteroid/<path:asteroidid>', methods=['DELETE'])
+@asteroids_bp.route('asteroid/delete/<path:asteroidid>', methods=['DELETE'])
 def delete_asteroid_info(asteroidid):
     """
     Flask Handler for DELETING asteroid info; DELETE CALL
