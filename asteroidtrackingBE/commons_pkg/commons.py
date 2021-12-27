@@ -2,12 +2,13 @@ import random
 import json
 from redis_pkg import conn_handlers, redis_library
 from logger_pkg.logger import Logger
+from redis_pkg.redis_library import ping_redis
 
 
-# creating some global variables for easy implementation. Of course this won't be the way for production code.
 frontend_stream_name = 'asteroids_frontend_stream'
 microservice_stream_name = 'asteroids_stream'
 service = 'asteroidtracking_service'
+health_status = ['good', 'poor']
 
 
 def getuniqueid():
@@ -35,7 +36,7 @@ def extract_response(data):
     return actual_data_dict
 
 
-def request_handler(req, body):
+def request_handler(req, body, microservice_strm_name, health_check=False):
     """
     A common request handler which delegates all the (asteroid)requests to the backend service with the help of
     `microservice_stream_name` (backend service)stream.
@@ -50,7 +51,7 @@ def request_handler(req, body):
         message=f'request: {req.path}, method: {req.method}, header: {json.dumps({key:value for key, value in req.headers})}, body: {body}'
     )
     # 2. add this to redis stream(name): asteroids_stream
-    redis_library.add_data_to_stream(rconn=rconn, stream=microservice_stream_name, data={uid: json.dumps(body)})
+    redis_library.add_data_to_stream(rconn=rconn, stream=microservice_strm_name, data={uid: json.dumps(body)})
     response_data = redis_library.read_data_from_stream(
         stream=frontend_stream_name, rconn=rconn, count=1, block=10000
     )
@@ -63,11 +64,26 @@ def request_handler(req, body):
     else:
         data = {
             'error': 'Error message described below',
-            'message': 'Make sure the redis and asteroidprocessor services are running locally',
+            'message': 'Make sure the redis and backend services are running locally and are functioning properly',
             'response_code': 503
         }
         objlog.log(level='ERROR', message=f'response: {json.dumps(data)}', type='response', req_id=uid)
+
     ret = data
+    if health_check:
+        data = ret.copy()
+        services = data.get('services', {})
+        if services:
+            services.update(asteroidTrackingService=health_status[0] if ping_redis(rconn) else health_status[1])
+        else:
+            services.update({
+                'asteroidTrackingService': health_status[0] if ping_redis(rconn) else health_status[1],
+                body['service_name']: health_status[1]
+            })
+            data.update(services=services, status='failed')
+
+        ret = data
+
     ret_code = data.get('response_code')
     del data['response_code']
 

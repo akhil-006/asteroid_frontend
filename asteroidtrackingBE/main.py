@@ -8,7 +8,9 @@ def main():
     Register all the (asteroid) blueprint over here
     """
     from views_pkg.asteriods_calls import asteroids_bp
+    from views_pkg.health_info import health_bp
     asteroid_app.register_blueprint(asteroids_bp)
+    asteroid_app.register_blueprint(health_bp)
 
 
 def run():

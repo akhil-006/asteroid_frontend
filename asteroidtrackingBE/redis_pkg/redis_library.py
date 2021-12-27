@@ -34,3 +34,10 @@ def delete_data(rconn, key, config='info:asteroid'):
     Deletes the key from the redis hash
     """
     return rconn.hdel(config, key)
+
+
+def ping_redis(rconn):
+    """
+    Checks whether redis is working or not i.e. whether it is able to be pinged or not
+    """
+    return rconn.ping()

@@ -1,6 +1,6 @@
 import time
 from flask import Blueprint, request
-from commons_pkg.commons import frontend_stream_name, request_handler
+from commons_pkg.commons import frontend_stream_name, request_handler, microservice_stream_name
 
 
 asteroids_bp = Blueprint('asteroids_bp', __name__, url_prefix='/')
@@ -14,9 +14,9 @@ def create_asteroid():
     try:
         # get the details of asteroid to be added
         body = request.json
-        body.update(method=request.method)
+        body.update(method='create_asteroid')
         body.update(response_stream_name=frontend_stream_name)
-        ret, ret_code = request_handler(request, body)
+        ret, ret_code = request_handler(request, body, microservice_stream_name)
     except Exception as ex:
         msg = {
             'error': 'Error Occurred',
@@ -37,9 +37,9 @@ def get_asteroid_info(asteroidid):
     """
     try:
         body = dict(asteroid_id=asteroidid)
-        body.update(method=request.method)
+        body.update(method='fetch_asteroid')
         body.update(response_stream_name=frontend_stream_name)
-        ret, ret_code = request_handler(request, body)
+        ret, ret_code = request_handler(request, body, microservice_stream_name)
     except Exception as ex:
         msg = {
             'error': 'Error Occurred',
@@ -61,9 +61,9 @@ def update_asteroid_info(asteroidid):
     try:
         body = request.json
         body.update(asteroid_id=asteroidid)
-        body.update(method=request.method)
+        body.update(method='update_asteroid')
         body.update(response_stream_name=frontend_stream_name)
-        ret, ret_code = request_handler(request, body)
+        ret, ret_code = request_handler(request, body, microservice_stream_name)
     except Exception as ex:
         msg = {
             'error': 'Error Occurred',
@@ -84,9 +84,9 @@ def delete_asteroid_info(asteroidid):
     """
     try:
         body = dict(asteroid_id=asteroidid)
-        body.update(method=request.method)
+        body.update(method='delete_asteroid')
         body.update(response_stream_name=frontend_stream_name)
-        ret, ret_code = request_handler(request, body)
+        ret, ret_code = request_handler(request, body, microservice_stream_name)
     except Exception as ex:
         msg = {
             'error': 'Error Occurred',
