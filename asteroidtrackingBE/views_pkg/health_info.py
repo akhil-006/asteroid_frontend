@@ -9,7 +9,7 @@ health_bp = Blueprint('health_bp', __name__, url_prefix='/')
 @health_bp.route('health/service', methods=['GET'])
 def service_health_info():
     """
-    Flask Handler for DELETING asteroid info; DELETE CALL
+    Flask Handler for Fetching the health status of the front-end and back-end services; GET CALL
     """
     try:
         service_name = request.args.get('name', None)
