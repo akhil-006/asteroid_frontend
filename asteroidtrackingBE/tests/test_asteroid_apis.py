@@ -1,7 +1,7 @@
 import time
 import requests as rq
 
-
+# change the host:port value for the server you are testing accordingly
 host_port = 'http://192.168.1.100:8444'
 
 asteroid_id = list()
